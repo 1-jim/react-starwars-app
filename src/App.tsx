@@ -37,7 +37,7 @@ const stackStyles: Partial<IStackStyles> = {
 export const App: React.FunctionComponent = () => {
   return (
     <div className="background-container">
-      <div className="">
+      <div className="stars">
       <Stack
         horizontalAlign="center"
         verticalAlign="center"

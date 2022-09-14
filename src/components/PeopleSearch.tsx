@@ -20,12 +20,12 @@ import {
   Stack,
   Toggle,
 } from "@fluentui/react";
-import { setIconOptions } from "@fluentui/react/lib/Styling";
+import { DefaultPalette, setIconOptions } from "@fluentui/react/lib/Styling";
 import { SwapiPeopleList } from "../models/swapiPeople";
 function PeopleSearch(): JSX.Element {
   const [responseSvc, setResponseSvc] = useState<SwapiPeopleList>();
+  const [responseItemCount, setResponseItemCount] = useState(0);
   const [error, setError] = useState<unknown>();
-  const [isWookieLang, setIsWookieLang] = useState(false);
   const [isLoadingSvc, setIsLoadingSvc] = useState(false);
   const [target, setTarget] = useState("");
 
@@ -34,13 +34,14 @@ function PeopleSearch(): JSX.Element {
   setIconOptions({ disableWarnings: true });
 
   const cardStyles: IDocumentCardStyles = {
-    root: { display: "inline-block", marginRight: 20, width: 320 },
+    root: {
+      display: "inline-block",
+      marginRight: 20,
+      width: 280,
+      paddingBottom: 5,
+      backgroundColor: "black",
+    },
   };
-
-  function wookieLangugeChange() {
-    setIsWookieLang(!isWookieLang);
-    console.log("Wookie Language" + isWookieLang ? " Enabled" : "Disabled");
-  }
 
   async function searchForText(): Promise<void> {
     setIsLoadingSvc(true);
@@ -52,32 +53,6 @@ function PeopleSearch(): JSX.Element {
     setIsLoadingSvc(false);
   }
 
-  async function DoPeopleFetch(): Promise<any> {
-    useEffect(() => {
-      if (isLoadingSvc) {
-        console.log("already loading service");
-        return;
-      }
-
-      const fetchData = async () => {
-        try {
-          setIsLoadingSvc(true);
-          const res = await swapiGetter("people/?search=" + target, "");
-          setResponseSvc(res);
-        } catch (err) {
-          console.error(JSON.stringify(err));
-          setError(err);
-        } finally {
-          setIsLoadingSvc(false);
-        }
-      };
-
-      if (target.length > 0) {
-        void fetchData();
-      }
-    }, [isLoadingSvc, target]);
-  }
-
   const searchTheGalaxy = async (e: any) => {
     if (target.length === 0) {
       console.log("Target Is Empty!");
@@ -85,10 +60,7 @@ function PeopleSearch(): JSX.Element {
     }
     try {
       setIsLoadingSvc(true);
-      let url = "people/?search=" + target;
-      if (isWookieLang) {
-        url = "people/?search=" + target + "&format=wookiee";
-      }
+      const url = "people/?search=" + target;
       console.log(url);
       const res = await swapiGetter(url, "");
       setResponseSvc(res);
@@ -99,6 +71,11 @@ function PeopleSearch(): JSX.Element {
       setIsLoadingSvc(false);
       localStorage.setItem("PeopleSearch", target);
       setTarget("");
+    }
+    if (responseSvc !== undefined) {
+      setResponseItemCount(responseSvc.count);
+    } else {
+      setResponseItemCount(0);
     }
   };
 
@@ -115,12 +92,6 @@ function PeopleSearch(): JSX.Element {
 
   return (
     <>
-      <Toggle
-        label="Wookie Language Translator"
-        onText="Enabled"
-        offText="Disabled"
-        onChange={wookieLangugeChange}
-      />
       <form onSubmit={searchTheGalaxy} style={{ padding: "1em" }}>
         <Stack horizontal tokens={stackTokens}>
           <SearchBox
@@ -130,9 +101,12 @@ function PeopleSearch(): JSX.Element {
             onChange={(_, newValue) => {
               if (newValue !== undefined) {
                 setTarget(newValue.toLowerCase());
+                //console.log("Target string: " + target);
               }
             }}
-            onSearch={(e) => searchTheGalaxy(e)}
+            onSearch={(e) => {
+              searchTheGalaxy(e);
+            }}
             width={500}
             onEscape={(e) => {
               console.log("Custom onEscape Called");
@@ -158,30 +132,35 @@ function PeopleSearch(): JSX.Element {
           labelPosition="left"
         />
       ) : null}
-      {responseSvc === null
-        ? null
-        : responseSvc?.results?.map((peeps) => (
-            <DocumentCard
-              key={peeps.created}
-              aria-label={"Star Wars Character:" + peeps.name}
-              type={DocumentCardType.normal}
-              styles={cardStyles}
-              onClickHref={peeps.url}
-            >
-              <DocumentCardTitle title={peeps.name} />
-              <DocumentCardDetails>
-                <Label>Gender: {peeps.gender}</Label>
-                <Label>Eye Colour: {peeps.eye_color}</Label>
-                <Label>Gender: {peeps.gender}</Label>
-                <Label>Skin Colour: {peeps.skin_color}</Label>
-                <Label>Height: {peeps.height}</Label>
-                <Label onClick={searchForText}>
-                  Homeworld: {peeps.homeworld}
-                </Label>
-                <Link onClick={searchForText}>Homeworld</Link>
-              </DocumentCardDetails>
-            </DocumentCard>
-          ))}
+      <div style={{ width: 100 / responseItemCount + "%" }}>
+        {responseSvc === null
+          ? null
+          : responseSvc?.results?.map((peeps) => (
+              <DocumentCard
+                key={peeps.created}
+                aria-label={"Star Wars Character:" + peeps.name}
+                type={DocumentCardType.normal}
+                styles={cardStyles}
+                onClickHref={peeps.url}
+              >
+                <DocumentCardTitle
+                  title={peeps.name}
+                  className="App-DocCardTitle"
+                />
+                <DocumentCardDetails className="App-DocCardBody">
+                  <Label>Gender: {peeps.gender}</Label>
+                  <Label>Eye Colour: {peeps.eye_color}</Label>
+                  <Label>Gender: {peeps.gender}</Label>
+                  <Label>Skin Colour: {peeps.skin_color}</Label>
+                  <Label>Height: {peeps.height}</Label>
+                  <Label onClick={searchForText}>
+                    Homeworld: {peeps.homeworld}
+                  </Label>
+                  <Link onClick={searchForText}>Homeworld</Link>
+                </DocumentCardDetails>
+              </DocumentCard>
+            ))}
+      </div>
     </>
   );
 }

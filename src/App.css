@@ -11,6 +11,15 @@
 	font-size: larger;
 }
 
+.App-DocCardTitle{
+	background-color: goldenrod;
+}
+
+.App-DocCardBody{
+	background-color: silver;
+	padding-bottom: 1em;
+}
+
 .App-mb-2 {
 	margin-bottom: 2 !important;
 }
@@ -85,7 +94,7 @@
 }
 
 .background-container{
-	position: fixed;
+	position: static;
 	top: 0;
 	left:0;
 	bottom: 0;
@@ -94,7 +103,7 @@
 
 .stars {
  background: black url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/1231630/stars.png) repeat;
- position: absolute;
+ position: static;
 	top: 0;
 	bottom: 0;
 	left: 0;

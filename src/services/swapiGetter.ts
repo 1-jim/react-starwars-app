@@ -3,7 +3,7 @@ import axios, { AxiosRequestConfig } from 'axios';
 async function swapiGetter(slug: string, id: string) {
   const options: AxiosRequestConfig = {
     baseURL: "https://swapi.dev/api/",
-    timeout: 3000,
+    timeout: 10000,
     method: "get"
   };
 
@@ -21,6 +21,7 @@ async function swapiGetter(slug: string, id: string) {
   }
   catch (err) {
     console.error(err);
+    return err;
   }
 }
 

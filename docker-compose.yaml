@@ -1,0 +1,13 @@
+version: '3.7'
+services:
+  starwars:
+    image: reactdemoapp:latest
+    container_name: starwars
+    hostname: starwars
+    ports:
+      - 3001:3000
+    networks:
+      - network
+networks:
+  network:
+    driver: bridge
