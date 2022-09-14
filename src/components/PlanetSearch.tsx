@@ -16,14 +16,14 @@ import {
   SpinnerSize,
   Stack,
 } from "@fluentui/react";
-import { PlanetList } from "../swapiTypes/planetList";
+import { SwapiPlanets } from "../models/swapiPlanets";
 import { AxiosError } from "axios";
 import axios, { AxiosResponse } from "axios";
 
 function PeopleSearch(): JSX.Element {
   const [response, setResponse] = useState<AxiosResponse>();
   const [error, setError] = useState<AxiosError>();
-  const [planetData, setPlanetData] = useState<PlanetList>();
+  const [planetData, setPlanetData] = useState<SwapiPlanets>();
   const [isLoadingSvc, setIsLoadingSvc] = useState(false);
   const [fetchUrl, setFetchUrl] = useState<string>();
   const theme = getTheme();
@@ -43,11 +43,11 @@ function PeopleSearch(): JSX.Element {
       const fetchData = async () => {
         try {
           setIsLoadingSvc(true);
-          const resp = await swapiGetter("planets", -1);
+          const resp = await swapiGetter("planets", "");
           const res = await axios.get("https://swapi.dev/api/planets");
           setResponse(res);
           if (response?.data.results !== null) {
-            const swPlanets: PlanetList = res.data.results;
+            const swPlanets: SwapiPlanets = res.data.results;
             setPlanetData(swPlanets);
           } else {
             console.error("no results found in web call");
