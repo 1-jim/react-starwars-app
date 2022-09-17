@@ -1,139 +1,103 @@
-import { useEffect, useState } from "react";
+import * as React from "react";
+import { useState } from "react";
 import swapiGetter from "../services/swapiGetter";
 import {
-  DocumentCard,
-  DocumentCardDetails,
-  DocumentCardTitle,
-  DocumentCardType,
-  getTheme,
-  IDocumentCardStyles,
+  ISearchBoxStyles,
   IStackTokens,
-  Label,
   MessageBar,
   MessageBarType,
   PrimaryButton,
-  Spinner,
-  SpinnerSize,
+  SearchBox,
   Stack,
 } from "@fluentui/react";
-import { SwapiPlanets } from "../models/swapiPlanets";
-import { AxiosError } from "axios";
-import axios, { AxiosResponse } from "axios";
+import { setIconOptions } from "@fluentui/react/lib/Styling";
+import PlanetResponse from "./PlanetResponse";
+import { SwapiPlanetsList } from "../models/swapiPlanets";
 
-function PeopleSearch(): JSX.Element {
-  const [response, setResponse] = useState<AxiosResponse>();
-  const [error, setError] = useState<AxiosError>();
-  const [planetData, setPlanetData] = useState<SwapiPlanets>();
+function PlanetSearch(): JSX.Element {
+  const [responseSvc, setResponseSvc] = useState<SwapiPlanetsList>();
+  const [responseItemCount, setResponseItemCount] = useState(0);
+  const [error, setError] = useState<unknown>();
   const [isLoadingSvc, setIsLoadingSvc] = useState(false);
-  const [fetchUrl, setFetchUrl] = useState<string>();
-  const theme = getTheme();
-  const stackTokens: IStackTokens = { childrenGap: 15 };
+  const [target, setTarget] = useState("");
 
-  const cardStyles: IDocumentCardStyles = {
-    root: { display: "inline-block", marginRight: 20, width: 320 },
+  const stackTokens: IStackTokens = { childrenGap: 15 };
+  const searchBoxStyles: Partial<ISearchBoxStyles> = { root: { width: 600 } };
+  setIconOptions({ disableWarnings: true });
+
+  const searchTheGalaxy = async (e: any) => {
+    if (target.length === 0) {
+      console.log("Target Is Empty!");
+      return;
+    }
+    try {
+      setIsLoadingSvc(true);
+      const url = "planets/?search=" + target;
+      console.log(url);
+      const res = await swapiGetter(url, "");
+      setResponseSvc(res);
+    } catch (err) {
+      console.error(JSON.stringify(err));
+      setError(err);
+    } finally {
+      setIsLoadingSvc(false);
+      localStorage.setItem("PlanetSearch", target);
+    }
+    if (responseSvc !== undefined) {
+      setResponseItemCount(responseSvc.count);
+    } else {
+      setResponseItemCount(0);
+    }
   };
 
-  async function DoServiceFetch(): Promise<any> {
-    useEffect(() => {
-      if (isLoadingSvc) {
-        console.log("already loading service");
-        return;
-      }
-
-      const fetchData = async () => {
-        try {
-          setIsLoadingSvc(true);
-          const resp = await swapiGetter("planets", "");
-          const res = await axios.get("https://swapi.dev/api/planets");
-          setResponse(res);
-          if (response?.data.results !== null) {
-            const swPlanets: SwapiPlanets = res.data.results;
-            setPlanetData(swPlanets);
-          } else {
-            console.error("no results found in web call");
-          }
-          setFetchUrl(undefined);
-        } catch (err) {
-          console.error(err);
-          //setError(err);
-        }
-      };
-
-      void fetchData();
-      setIsLoadingSvc(false);
-    }, [isLoadingSvc]);
-  }
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const thing = DoServiceFetch();
-  console.log(JSON.stringify(planetData));
+  if (error)
+    return (
+      <MessageBar
+        messageBarType={MessageBarType.error}
+        dismissButtonAriaLabel="close"
+        isMultiline={true}
+      >
+        {JSON.stringify(error)}
+      </MessageBar>
+    );
 
   return (
-    <div style={{ boxShadow: theme.effects.elevation8, padding: "2em" }}>
-      <PrimaryButton
-        style={{ padding: 50 }}
-        text="Push the Button"
-        onClick={() => setItOff()}
-      />
-      <hr></hr>
-      <Stack horizontal tokens={stackTokens}>
-        <PrimaryButton
-          text="Previous"
-          onClick={() => setFetchUrl(response?.data.previous)}
-          style={{ width: 300 }}
-        />
-        <PrimaryButton
-          text="Next"
-          onClick={() => setFetchUrl(response?.data.next)}
-          style={{ width: 300 }}
-        />
-      </Stack>
-      {error !== undefined && (
-        <MessageBar
-          messageBarType={MessageBarType.error}
-          dismissButtonAriaLabel="close"
-          isMultiline={true}
-        />
-      )}
-      <Stack tokens={stackTokens}>
-        {planetData === undefined ? (
-          <p>No Data!</p>
-        ) : isLoadingSvc ? (
-          <Spinner
-            size={SpinnerSize.large}
-            label="Reticulating Splines"
-            ariaLive="assertive"
-            labelPosition="left"
+    <>
+      <form onSubmit={searchTheGalaxy} style={{ padding: "1em" }}>
+        <Stack horizontal tokens={stackTokens}>
+          <SearchBox
+            disabled={isLoadingSvc}
+            styles={searchBoxStyles}
+            placeholder="Search the Star Wars Universe"
+            onChange={(_, newValue) => {
+              if (newValue !== undefined) {
+                setTarget(newValue.toLowerCase());
+                //console.log("Target string: " + target);
+              }
+            }}
+            onSearch={(e) => {
+              searchTheGalaxy(e);
+            }}
+            width={500}
+            onEscape={(e) => {
+              console.log("Custom onEscape Called");
+              setTarget("");
+            }}
+            onClear={(e) => {
+              console.log("Custom onClear Called");
+              setTarget("");
+            }}
           />
-        ) : (
-          planetData?.results?.map((planet, index) => (
-            <>
-              <p>{index}</p>
-
-              <DocumentCard
-                aria-label={"Star Wars Planet:" + planet.name}
-                type={DocumentCardType.compact}
-                styles={cardStyles}
-                onClickHref={(planet.url)}
-              >
-                <DocumentCardTitle title={planet.name} />
-                <DocumentCardDetails>
-                  <Label>Population: {planet.population}</Label>
-                </DocumentCardDetails>
-              </DocumentCard>
-            </>
-          ))
-        )}
-      </Stack>
-    </div>
+          <PrimaryButton
+            disabled={isLoadingSvc}
+            text="Search your feelings.."
+            onClick={(e) => searchTheGalaxy(e)}
+          />
+        </Stack>
+      </form>
+      <PlanetResponse search={target} isLoading={isLoadingSvc} responseSvc={responseSvc}/>
+    </>
   );
 }
 
-export default PeopleSearch;
-
-function searchForText(): void {
-  alert("You clicked me!");
-}
-function setItOff(): void {
-  alert("You set it off!");
-}
+export default PlanetSearch;

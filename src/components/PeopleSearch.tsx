@@ -1,27 +1,18 @@
 import * as React from "react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import swapiGetter from "../services/swapiGetter";
 import {
-  DocumentCard,
-  DocumentCardDetails,
-  DocumentCardTitle,
-  DocumentCardType,
-  IDocumentCardStyles,
   ISearchBoxStyles,
   IStackTokens,
-  Label,
-  Link,
   MessageBar,
   MessageBarType,
   PrimaryButton,
   SearchBox,
-  Spinner,
-  SpinnerSize,
   Stack,
-  Toggle,
 } from "@fluentui/react";
-import { DefaultPalette, setIconOptions } from "@fluentui/react/lib/Styling";
+import { setIconOptions } from "@fluentui/react/lib/Styling";
 import { SwapiPeopleList } from "../models/swapiPeople";
+import PeopleResponse from "./PeopleResponse";
 function PeopleSearch(): JSX.Element {
   const [responseSvc, setResponseSvc] = useState<SwapiPeopleList>();
   const [responseItemCount, setResponseItemCount] = useState(0);
@@ -32,26 +23,6 @@ function PeopleSearch(): JSX.Element {
   const stackTokens: IStackTokens = { childrenGap: 15 };
   const searchBoxStyles: Partial<ISearchBoxStyles> = { root: { width: 600 } };
   setIconOptions({ disableWarnings: true });
-
-  const cardStyles: IDocumentCardStyles = {
-    root: {
-      display: "inline-block",
-      marginRight: 20,
-      width: 280,
-      paddingBottom: 5,
-      backgroundColor: "black",
-    },
-  };
-
-  async function searchForText(): Promise<void> {
-    setIsLoadingSvc(true);
-    alert("You searched for " + target);
-    const oldTarget = localStorage.getItem("PeopleSearch");
-    if (oldTarget !== null) {
-      setTarget(oldTarget);
-    }
-    setIsLoadingSvc(false);
-  }
 
   const searchTheGalaxy = async (e: any) => {
     if (target.length === 0) {
@@ -70,7 +41,6 @@ function PeopleSearch(): JSX.Element {
     } finally {
       setIsLoadingSvc(false);
       localStorage.setItem("PeopleSearch", target);
-      setTarget("");
     }
     if (responseSvc !== undefined) {
       setResponseItemCount(responseSvc.count);
@@ -124,43 +94,7 @@ function PeopleSearch(): JSX.Element {
           />
         </Stack>
       </form>
-      {isLoadingSvc ? (
-        <Spinner
-          size={SpinnerSize.large}
-          label="Long Range Scanning..."
-          ariaLive="assertive"
-          labelPosition="left"
-        />
-      ) : null}
-      <div style={{ width: 100 / responseItemCount + "%" }}>
-        {responseSvc === null
-          ? null
-          : responseSvc?.results?.map((peeps) => (
-              <DocumentCard
-                key={peeps.created}
-                aria-label={"Star Wars Character:" + peeps.name}
-                type={DocumentCardType.normal}
-                styles={cardStyles}
-                onClickHref={peeps.url}
-              >
-                <DocumentCardTitle
-                  title={peeps.name}
-                  className="App-DocCardTitle"
-                />
-                <DocumentCardDetails className="App-DocCardBody">
-                  <Label>Gender: {peeps.gender}</Label>
-                  <Label>Eye Colour: {peeps.eye_color}</Label>
-                  <Label>Gender: {peeps.gender}</Label>
-                  <Label>Skin Colour: {peeps.skin_color}</Label>
-                  <Label>Height: {peeps.height}</Label>
-                  <Label onClick={searchForText}>
-                    Homeworld: {peeps.homeworld}
-                  </Label>
-                  <Link onClick={searchForText}>Homeworld</Link>
-                </DocumentCardDetails>
-              </DocumentCard>
-            ))}
-      </div>
+      <PeopleResponse search={target} isLoading={isLoadingSvc} responseSvc={responseSvc}/>
     </>
   );
 }

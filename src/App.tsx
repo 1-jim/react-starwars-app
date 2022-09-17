@@ -17,7 +17,7 @@ import Affiliation from "./components/Affiliation";
 import ChosenColours from "./components/ChosenColoursUsingRef";
 import ChosenColoursUsingState from "./components/ChosenColoursUsingState";
 import GitInfo from "./components/GitInfo";
-
+import { Outlet } from 'react-router-dom';
 initializeIcons();
 
 document.title = "Star Wars API";
@@ -56,6 +56,7 @@ export const App: React.FunctionComponent = () => {
         {/* <GitInfo/> */}
       </Stack>
       </div>
+      <Outlet/>
     </div>
   );
 };
