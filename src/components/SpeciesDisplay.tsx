@@ -1,17 +1,18 @@
+import { Label } from "@fluentui/react";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { SwapiSpecies } from "../models/swapiSpecies";
 import swapiGetter from "../services/swapiGetter";
-import PersonDisplay from "./PersonDisplay";
+import { ISpeciesDisplayProps } from "./ISpeciesDisplayProps";
+import MyLoadingSpinner from "./MyLoadingSpinner";
 
-export default function SpeciesDisplay() {
+export default function SpeciesDisplay(props: ISpeciesDisplayProps) {
   const [searchParams, setSearchParams] = useSearchParams();
   const [responseSvc, setResponseSvc] = useState<SwapiSpecies>();
   const [isLoading, setIsLoading] = useState(false);
-  const iD = searchParams.get("id");
-  const person = searchParams.get("person");
-  console.log("Query String ID: " + iD);
-  console.log("Query String Person: " + person);
+
+  let iD = searchParams.get("id");
+  if (props.speciesUrl) iD = getSpeciesId(props.speciesUrl);
 
   const getData = async () => {
     if (iD)
@@ -32,14 +33,25 @@ export default function SpeciesDisplay() {
     getData();
   }, []);
 
+  function getSpeciesId(url: string): string {
+    console.log("Species Url " + url);
+    try {
+      let text = url.slice(0, url.length - 1);
+      let id = text.slice(text.lastIndexOf("/") + 1);
+      return id;
+    } catch {
+      return "1";
+    }
+  }
+
+  if (isLoading)
+    return <MyLoadingSpinner divHeight={30} loadingText="Scanning lifeform" />;
+
   if (responseSvc)
     return (
       <>
-        <div>SpeciesDisplay {iD}</div>
-        <ul>
-          <li>{responseSvc.name}</li>
-        </ul>
-        {person ? <PersonDisplay characterId={person} /> : null}
+        <Label>Species: {responseSvc.name}</Label>
+        <Label>Language: {responseSvc.language}</Label>
       </>
     );
 

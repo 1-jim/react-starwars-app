@@ -10,7 +10,7 @@ function MyLoadingSpinner(props: IMyLoadingSpinnerProps): JSX.Element {
         ariaLive="assertive"
         labelPosition="left"
       />
-      <img className="App-logo" src={graphic} alt="scanning universe.." />
+      {/* <img className="App-logo" src={graphic} alt="scanning universe.." /> */}
     </div>
   );
 }

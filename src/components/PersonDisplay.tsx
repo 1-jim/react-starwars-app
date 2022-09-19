@@ -13,6 +13,7 @@ import { SwapiPerson } from "../models/swapiPeople";
 import swapiGetter from "../services/swapiGetter";
 import { IPersonDisplayProps } from "./IPersonDisplayProps";
 import MyLoadingSpinner from "./MyLoadingSpinner";
+import SpeciesDisplay from "./SpeciesDisplay";
 
 export default function PersonDisplay(props: IPersonDisplayProps) {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -39,12 +40,14 @@ export default function PersonDisplay(props: IPersonDisplayProps) {
     return str.concat(id);
   }
 
-  function getSpeciesLink(url: string): string {
+  function getSpeciesLink(url: string, personUrl: string): string {
     const str = "/species?id=";
     try {
       let text = url.slice(0, url.length - 1);
       let id = text.slice(text.lastIndexOf("/") + 1);
-      return str.concat(id);
+      let person = personUrl.slice(0, personUrl.length -1);
+      let personId = person.slice(person.lastIndexOf("/") +1);
+      return str.concat(id).concat("&person=").concat(personId);
     } catch {
       return "/species";
     }
@@ -94,9 +97,7 @@ export default function PersonDisplay(props: IPersonDisplayProps) {
           <Label>Height: {responseSvc.height}</Label>
           <Label>Weight: {responseSvc.mass}</Label>
           <Label>Gender: {responseSvc.gender}</Label>
-          <FluentLink href={getSpeciesLink(responseSvc.species[0])}>
-            Identify {responseSvc.name}'s Species
-          </FluentLink>
+          <SpeciesDisplay speciesUrl={responseSvc.species[0]}/>
           <FluentLink href={getHomeworldLink(responseSvc.homeworld)}>
             Visit {responseSvc.name}'s Homeworld
           </FluentLink>
