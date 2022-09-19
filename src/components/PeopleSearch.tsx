@@ -1,4 +1,3 @@
-import * as React from "react";
 import { useState } from "react";
 import swapiGetter from "../services/swapiGetter";
 import {
@@ -21,7 +20,7 @@ function PeopleSearch(): JSX.Element {
   const [target, setTarget] = useState("");
 
   const stackTokens: IStackTokens = { childrenGap: 15 };
-  const searchBoxStyles: Partial<ISearchBoxStyles> = { root: { width: 600 } };
+  const searchBoxStyles: Partial<ISearchBoxStyles> = { root: { width: 300 } };
   setIconOptions({ disableWarnings: true });
 
   const searchTheGalaxy = async (e: any) => {
@@ -67,7 +66,7 @@ function PeopleSearch(): JSX.Element {
           <SearchBox
             disabled={isLoadingSvc}
             styles={searchBoxStyles}
-            placeholder="Search the Star Wars Universe"
+            placeholder="Find Characters in the Star Wars Universe"
             onChange={(_, newValue) => {
               if (newValue !== undefined) {
                 setTarget(newValue.toLowerCase());

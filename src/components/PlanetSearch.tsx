@@ -22,7 +22,7 @@ function PlanetSearch(): JSX.Element {
   const [target, setTarget] = useState("");
 
   const stackTokens: IStackTokens = { childrenGap: 15 };
-  const searchBoxStyles: Partial<ISearchBoxStyles> = { root: { width: 600 } };
+  const searchBoxStyles: Partial<ISearchBoxStyles> = { root: { width: 300 } };
   setIconOptions({ disableWarnings: true });
 
   const searchTheGalaxy = async (e: any) => {
@@ -68,7 +68,7 @@ function PlanetSearch(): JSX.Element {
           <SearchBox
             disabled={isLoadingSvc}
             styles={searchBoxStyles}
-            placeholder="Search the Star Wars Universe"
+            placeholder="Search the Star Wars Universe for Planets"
             onChange={(_, newValue) => {
               if (newValue !== undefined) {
                 setTarget(newValue.toLowerCase());

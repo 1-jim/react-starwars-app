@@ -58,10 +58,7 @@ export default function SpeciesDisplay(props: ISpeciesDisplayProps) {
   return (
     <>
       <div>
-        <ul>
-          <li>stuff</li>
-          <li>things</li>
-        </ul>
+        Species Not Found!
       </div>
     </>
   );

@@ -5,12 +5,12 @@ import {
   DocumentCardType,
   IDocumentCardStyles,
   Label,
-  Spinner,
-  SpinnerSize,
 } from "@fluentui/react";
 import { Link } from 'react-router-dom';
 import { IPlanetResponseProps } from "./IPlanetResponseProps";
 import MyLoadingSpinner from "./MyLoadingSpinner";
+import Col from "react-bootstrap/Col";
+import Row from "react-bootstrap/Row";
 
 function PlanetResponse(props: IPlanetResponseProps): JSX.Element {
   const cardStyles: IDocumentCardStyles = {
@@ -24,19 +24,19 @@ function PlanetResponse(props: IPlanetResponseProps): JSX.Element {
   };
 
   function linkToResidents(residents: any) {
-    return <div style={{ height: 600 }}>{JSON.stringify(residents)}</div>;
+    return <div style={{ height: 300 }}>{JSON.stringify(residents)}</div>;
   }
 
   if (props.isLoading)
     return (
-      <MyLoadingSpinner divHeight={600} loadingText = "Long Range Scanning.."/>
+      <MyLoadingSpinner divHeight={300} loadingText = "Long Range Scanning.."/>
     );
 
-    if (!props.responseSvc) return <div style={{ height: 600 }}></div>;
+    if (!props.responseSvc) return <div style={{ height: 300 }}></div>;
 
   if (props.responseSvc.count === 0)
     return (
-      <div style={{ height: 600 }}>
+      <div style={{ height: 300 }}>
         We searched for '{props.search}', all the way to the outer rim..
         <h2>This is not the planet you are looking for</h2>
       </div>

@@ -8,6 +8,7 @@ import {
   Link as FluentLink,
 } from "@fluentui/react";
 import { useEffect, useState } from "react";
+import Card from "react-bootstrap/Card";
 import { useSearchParams } from "react-router-dom";
 import { SwapiPerson } from "../models/swapiPeople";
 import swapiGetter from "../services/swapiGetter";
@@ -76,21 +77,16 @@ export default function PersonDisplay(props: IPersonDisplayProps) {
   }, []);
 
   if (isLoading)
-    return <MyLoadingSpinner divHeight={600} loadingText="Beep, Beep BOOP!" />;
+    return <MyLoadingSpinner divHeight={300} loadingText="Beep, Beep BOOP!" />;
 
   if (responseSvc)
     return (
-      <DocumentCard
-        key={responseSvc.created}
-        aria-label={"Star Wars Character:" + responseSvc.name}
-        type={DocumentCardType.normal}
-        styles={cardStyles}
-      >
-        <DocumentCardTitle
-          title={responseSvc.name}
-          className="App-DocCardTitle"
-        />
-        <DocumentCardDetails className="App-DocCardBody">
+      <Card border="warning" style={{ width: '18rem', paddingBottom: "1rem", marginBottom:"2rem" }}>
+        <Card.Body>
+          <Card.Title>
+            {responseSvc.name}
+          </Card.Title>
+          <Card.Text>
           <Label>Hair: {responseSvc.hair_color}</Label>
           <Label>Eyes: {responseSvc.eye_color}</Label>
           <Label>Skin: {responseSvc.skin_color}</Label>
@@ -101,8 +97,32 @@ export default function PersonDisplay(props: IPersonDisplayProps) {
           <FluentLink href={getHomeworldLink(responseSvc.homeworld)}>
             Visit {responseSvc.name}'s Homeworld
           </FluentLink>
-        </DocumentCardDetails>
-      </DocumentCard>
+          </Card.Text>
+        </Card.Body>
+      </Card>
+      // <DocumentCard
+      //   key={responseSvc.created}
+      //   aria-label={"Star Wars Character:" + responseSvc.name}
+      //   type={DocumentCardType.normal}
+      //   styles={cardStyles}
+      // >
+      //   <DocumentCardTitle
+      //     title={responseSvc.name}
+      //     className="App-DocCardTitle"
+      //   />
+      //   <DocumentCardDetails className="App-DocCardBody">
+      //     <Label>Hair: {responseSvc.hair_color}</Label>
+      //     <Label>Eyes: {responseSvc.eye_color}</Label>
+      //     <Label>Skin: {responseSvc.skin_color}</Label>
+      //     <Label>Height: {responseSvc.height}</Label>
+      //     <Label>Weight: {responseSvc.mass}</Label>
+      //     <Label>Gender: {responseSvc.gender}</Label>
+      //     <SpeciesDisplay speciesUrl={responseSvc.species[0]}/>
+      //     <FluentLink href={getHomeworldLink(responseSvc.homeworld)}>
+      //       Visit {responseSvc.name}'s Homeworld
+      //     </FluentLink>
+      //   </DocumentCardDetails>
+      // </DocumentCard>
     );
   return <div>PersonDisplay</div>;
 }

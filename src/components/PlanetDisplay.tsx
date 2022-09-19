@@ -44,7 +44,7 @@ export default function PlanetDisplay() {
     );
 
   if (isLoadingSvc)
-    return <MyLoadingSpinner divHeight={600} loadingText="Scanning Planet" />;
+    return <MyLoadingSpinner divHeight={300} loadingText="Scanning Planet" />;
 
   if (responseSvc !== undefined)
     return <div>{JSON.stringify(responseSvc)}</div>;

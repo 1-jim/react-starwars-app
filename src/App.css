@@ -1,3 +1,7 @@
+.Footer {
+	background: linear-gradient(to bottom, white, black);
+}
+
 .App {
   text-align: center;
   background-color: #282c34;
@@ -94,7 +98,7 @@
 }
 
 .background-container{
-	position: static;
+	flex: 1 0 auto;
 	top: 0;
 	left:0;
 	bottom: 0;
