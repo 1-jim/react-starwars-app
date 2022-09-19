@@ -90,7 +90,7 @@ function PlanetSearch(): JSX.Element {
           />
           <PrimaryButton
             disabled={isLoadingSvc}
-            text="Search your feelings.."
+            text="Intergalactic Search"
             onClick={(e) => searchTheGalaxy(e)}
           />
         </Stack>

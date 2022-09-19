@@ -7,12 +7,12 @@ import {
   IImageProps,
   Image,
   Label,
-  Spinner,
-  SpinnerSize,
+  Link,
 } from "@fluentui/react";
 import { IPeopleResponseProps } from "./IPeopleResponseProps";
-import { Link } from "react-router-dom";
-import notFoundPic from '../media/wookie.jpg';
+import notFoundPic from "../media/wookie.jpg";
+import MyLoadingSpinner from "./MyLoadingSpinner";
+import PersonDisplay from "./PersonDisplay";
 
 function PeopleResponse(props: IPeopleResponseProps): JSX.Element {
   const imageNoFoundProps: Partial<IImageProps> = {
@@ -33,30 +33,37 @@ function PeopleResponse(props: IPeopleResponseProps): JSX.Element {
     },
   };
 
-  function linkToHomeworld() {
-    return <div style={{ height: 600 }}>Build-Homeworld!</div>;
+  function getHomeworldLink(url: string): string {
+    const str = "/planet?id=";
+    let text = url.slice(0, url.length - 1);
+    let id = text.slice(text.lastIndexOf("/") + 1);
+    return str.concat(id);
+  }
+
+  function getSpeciesLink(url: string): string {
+    const str = "/species?id=";
+    try{
+      let text = url.slice(0, url.length - 1);
+      let id = text.slice(text.lastIndexOf("/") + 1);
+      return str.concat(id);
+    }
+    catch{
+      return "/species";
+    }
   }
 
   if (props.isLoading)
     return (
-      <div style={{ height: 600 }}>
-        <Spinner
-          size={SpinnerSize.large}
-          label="Long Range Scanning..."
-          ariaLive="assertive"
-          labelPosition="left"
-        />
-      </div>
+      <MyLoadingSpinner
+        divHeight={600}
+        loadingText="Scanning Jedi Archives.."
+      />
     );
 
   if (!props.responseSvc)
     return (
       <div style={{ height: 600 }}>
-        <Image
-          {...imageNoFoundProps}
-          alt="What a Wookie!"
-          width={400}
-        />
+        <Image {...imageNoFoundProps} alt="What a Wookie!" width={400} />
       </div>
     );
 
@@ -73,30 +80,7 @@ function PeopleResponse(props: IPeopleResponseProps): JSX.Element {
       {props.responseSvc === null
         ? null
         : props.responseSvc?.results?.map((peeps) => (
-            <DocumentCard
-              key={peeps.created}
-              aria-label={"Star Wars Character:" + peeps.name}
-              type={DocumentCardType.normal}
-              styles={cardStyles}
-              onClickHref={peeps.url}
-            >
-              <DocumentCardTitle
-                title={peeps.name}
-                className="App-DocCardTitle"
-              />
-              <DocumentCardDetails className="App-DocCardBody">
-                <Label>Hair: {peeps.hair_color}</Label>
-                <Label>Eyes: {peeps.eye_color}</Label>
-                <Label>Skin: {peeps.skin_color}</Label>
-                <Label>Height: {peeps.height}</Label>
-                <Label>Weight: {peeps.mass}</Label>
-                <Label>Gender: {peeps.gender}</Label>
-                <Label>Species: {peeps.species}</Label>
-                <Label onClick={linkToHomeworld}>
-                  Homeworld: {peeps.homeworld}
-                </Label>
-              </DocumentCardDetails>
-            </DocumentCard>
+            <PersonDisplay character={peeps}/>
           ))}
     </div>
   );

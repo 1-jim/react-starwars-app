@@ -1,6 +1,6 @@
 import axios, { AxiosRequestConfig } from 'axios';
 
-async function swapiGetter(slug: string, id: string) {
+async function swapiGetter(slug: string, id?: string) {
   const options: AxiosRequestConfig = {
     baseURL: "https://swapi.dev/api/",
     timeout: 10000,
@@ -9,7 +9,7 @@ async function swapiGetter(slug: string, id: string) {
 
   try {
     let query = slug;
-    if (id.length > 0) {
+    if (id) {
       query = query + '/' + id;
     }
     const res = await axios.get(query, options);

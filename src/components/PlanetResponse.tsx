@@ -10,6 +10,7 @@ import {
 } from "@fluentui/react";
 import { Link } from 'react-router-dom';
 import { IPlanetResponseProps } from "./IPlanetResponseProps";
+import MyLoadingSpinner from "./MyLoadingSpinner";
 
 function PlanetResponse(props: IPlanetResponseProps): JSX.Element {
   const cardStyles: IDocumentCardStyles = {
@@ -28,14 +29,7 @@ function PlanetResponse(props: IPlanetResponseProps): JSX.Element {
 
   if (props.isLoading)
     return (
-      <div style={{ height: 600 }}>
-        <Spinner
-          size={SpinnerSize.large}
-          label="Long Range Scanning..."
-          ariaLive="assertive"
-          labelPosition="left"
-        />
-      </div>
+      <MyLoadingSpinner divHeight={600} loadingText = "Long Range Scanning.."/>
     );
 
     if (!props.responseSvc) return <div style={{ height: 600 }}></div>;
