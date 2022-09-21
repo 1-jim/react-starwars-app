@@ -18,12 +18,7 @@ import Alert from "react-bootstrap/Alert";
 import Button from "react-bootstrap/Button";
 import "bootstrap/dist/css/bootstrap.min.css";
 import SquadFooter from "./SquadFooter";
-<link
-  rel="stylesheet"
-  href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css"
-  integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor"
-  crossOrigin="anonymous"
-/>;
+import PlanetSearch from "./components/PlanetSearch";
 
 initializeIcons();
 
@@ -42,21 +37,10 @@ const stackStyles: Partial<IStackStyles> = {
 };
 
 export const App: React.FunctionComponent = () => {
-  const [show, setShow] = React.useState(true);
   return (
-    <Container className="p-3">
+    <div className="container-fluid">
       <div className="background-container">
         <div className="stars">
-          <Button
-            onClick={() => setShow((show) => !show)}
-            variant="outline-success"
-          >
-            toggle alert
-          </Button>
-          <Alert show={show} variant="success">
-            <Alert.Heading>title</Alert.Heading>
-            <p>alert</p>
-          </Alert>
           <Stack
             horizontalAlign="center"
             verticalAlign="center"
@@ -65,10 +49,16 @@ export const App: React.FunctionComponent = () => {
             tokens={stackTokens}
           >
             <img className="App-logo" src={mainPic} alt="logo" />
-            <Card style={{ width: "80%", borderStyle: "double", backgroundColor: "silver" }}>
+            <Card
+              style={{
+                width: "100%",
+                borderStyle: "double",
+                backgroundColor: "silver",
+              }}
+            >
               <Card.Body>
                 <Text variant="xxLarge" styles={boldStyle}>
-                  Welcome to the Star Wars Universe
+                  Welcome to the Star Wars Info Centre
                 </Text>
               </Card.Body>
             </Card>
@@ -76,11 +66,12 @@ export const App: React.FunctionComponent = () => {
             {/* <ChosenColoursUsingState /> */}
             {/* <PlanetSearch /> */}
             <PeopleSearch />
+            <PlanetSearch />
             {/* <GitInfo/> */}
           </Stack>
         </div>
       </div>
       <SquadFooter />
-    </Container>
+    </div>
   );
 };

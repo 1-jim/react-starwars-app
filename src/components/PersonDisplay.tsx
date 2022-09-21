@@ -14,6 +14,7 @@ import { SwapiPerson } from "../models/swapiPeople";
 import swapiGetter from "../services/swapiGetter";
 import { IPersonDisplayProps } from "./IPersonDisplayProps";
 import MyLoadingSpinner from "./MyLoadingSpinner";
+import PlanetDisplay from "./PlanetDisplay";
 import SpeciesDisplay from "./SpeciesDisplay";
 
 export default function PersonDisplay(props: IPersonDisplayProps) {
@@ -90,13 +91,14 @@ export default function PersonDisplay(props: IPersonDisplayProps) {
           <Label>Hair: {responseSvc.hair_color}</Label>
           <Label>Eyes: {responseSvc.eye_color}</Label>
           <Label>Skin: {responseSvc.skin_color}</Label>
-          <Label>Height: {responseSvc.height}</Label>
-          <Label>Weight: {responseSvc.mass}</Label>
+          {/* <Label>Height: {responseSvc.height}</Label>
+          <Label>Weight: {responseSvc.mass}</Label> */}
           <Label>Gender: {responseSvc.gender}</Label>
           <SpeciesDisplay speciesUrl={responseSvc.species[0]}/>
           <FluentLink href={getHomeworldLink(responseSvc.homeworld)}>
             Visit {responseSvc.name}'s Homeworld
           </FluentLink>
+          <PlanetDisplay planetUrl={responseSvc.homeworld}/>
           </Card.Text>
         </Card.Body>
       </Card>

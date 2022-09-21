@@ -8,7 +8,7 @@ import Row from "react-bootstrap/Row";
 
 function PeopleResponse(props: IPeopleResponseProps): JSX.Element {
   const imageNoFoundProps: Partial<IImageProps> = {
-    src: notFoundPic,
+    src: "https://66.media.tumblr.com/011f129630947e8a7559b2a8d36e5010/tumblr_nsh0bcNJpI1so3q95o1_400.gif",
     // Show a border around the image (just for demonstration purposes)
     styles: (props) => ({
       root: { border: "1px solid " + props.theme.palette.neutralSecondary },
@@ -43,6 +43,31 @@ function PeopleResponse(props: IPeopleResponseProps): JSX.Element {
     }
   }
 
+  function getWidth(size: string): number {
+    let value = 12;
+    if (!props.responseSvc) return value;
+    switch (size) {
+      case "md":
+        if (props.responseSvc.count > 1) value = 6;
+        break;
+      case "lg":
+        if (props.responseSvc.count > 1)
+          if (props.responseSvc.count > 2) value = 6;
+        break;
+      case "xl":
+        if (props.responseSvc.count > 1)
+          if (props.responseSvc.count > 2) {
+            value = 4;
+          } else {
+            value = 6;
+          }
+        break;
+      default:
+        break;
+    }
+    return value;
+  }
+
   if (props.isLoading)
     return (
       <MyLoadingSpinner
@@ -68,14 +93,20 @@ function PeopleResponse(props: IPeopleResponseProps): JSX.Element {
 
   return (
     // <div style={{ width: 100 / props.responseSvc.count + "%" }}>
-    <div>
-      <Row xs={1} md={2} lg={2} className="g-5">
+    <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+      <Row>
         {props.responseSvc === null
           ? null
           : props.responseSvc?.results?.map((peeps) => (
               <>
-                <Col>
-                  <PersonDisplay character={peeps} />
+                <Col
+                  xs={getWidth("xs")}
+                  sm={getWidth("sm")}
+                  md={getWidth("md")}
+                  lg={getWidth("lg")}
+                  xl={getWidth("xl")}
+                >
+                  <PersonDisplay key={peeps.url} character={peeps} />
                 </Col>
               </>
             ))}

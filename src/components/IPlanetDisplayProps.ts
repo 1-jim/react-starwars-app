@@ -1,3 +1,3 @@
 export interface IPlanetDisplayProps {
-    url: string;
+    planetUrl: string;
 }

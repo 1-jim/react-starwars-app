@@ -5,22 +5,21 @@ import {
   IStackTokens,
   MessageBar,
   MessageBarType,
-  PrimaryButton,
   SearchBox,
   Stack,
 } from "@fluentui/react";
 import { setIconOptions } from "@fluentui/react/lib/Styling";
 import { SwapiPeopleList } from "../models/swapiPeople";
 import PeopleResponse from "./PeopleResponse";
+import { Button } from "react-bootstrap";
 function PeopleSearch(): JSX.Element {
   const [responseSvc, setResponseSvc] = useState<SwapiPeopleList>();
-  const [responseItemCount, setResponseItemCount] = useState(0);
   const [error, setError] = useState<unknown>();
   const [isLoadingSvc, setIsLoadingSvc] = useState(false);
   const [target, setTarget] = useState("");
 
   const stackTokens: IStackTokens = { childrenGap: 15 };
-  const searchBoxStyles: Partial<ISearchBoxStyles> = { root: { width: 300 } };
+  const searchBoxStyles: Partial<ISearchBoxStyles> = { root: { width: 400, height: 50 } };
   setIconOptions({ disableWarnings: true });
 
   const searchTheGalaxy = async (e: any) => {
@@ -40,11 +39,6 @@ function PeopleSearch(): JSX.Element {
     } finally {
       setIsLoadingSvc(false);
       localStorage.setItem("PeopleSearch", target);
-    }
-    if (responseSvc !== undefined) {
-      setResponseItemCount(responseSvc.count);
-    } else {
-      setResponseItemCount(0);
     }
   };
 
@@ -86,11 +80,9 @@ function PeopleSearch(): JSX.Element {
               setTarget("");
             }}
           />
-          <PrimaryButton
-            disabled={isLoadingSvc}
-            text="Search your feelings.."
-            onClick={(e) => searchTheGalaxy(e)}
-          />
+          <Button variant="outline-light" disabled={isLoadingSvc} onClick={(e) => searchTheGalaxy(e)}>
+            Search the Archive
+          </Button>
         </Stack>
       </form>
       <PeopleResponse search={target} isLoading={isLoadingSvc} responseSvc={responseSvc}/>

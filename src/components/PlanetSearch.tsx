@@ -1,4 +1,3 @@
-import * as React from "react";
 import { useState } from "react";
 import swapiGetter from "../services/swapiGetter";
 import {
@@ -6,13 +5,13 @@ import {
   IStackTokens,
   MessageBar,
   MessageBarType,
-  PrimaryButton,
   SearchBox,
   Stack,
 } from "@fluentui/react";
 import { setIconOptions } from "@fluentui/react/lib/Styling";
 import PlanetResponse from "./PlanetResponse";
 import { SwapiPlanetsList } from "../models/swapiPlanets";
+import { Button } from "react-bootstrap";
 
 function PlanetSearch(): JSX.Element {
   const [responseSvc, setResponseSvc] = useState<SwapiPlanetsList>();
@@ -88,14 +87,20 @@ function PlanetSearch(): JSX.Element {
               setTarget("");
             }}
           />
-          <PrimaryButton
+          <Button
+            variant="outline-light"
             disabled={isLoadingSvc}
-            text="Intergalactic Search"
             onClick={(e) => searchTheGalaxy(e)}
-          />
+          >
+            Intergalactic Search
+          </Button>
         </Stack>
       </form>
-      <PlanetResponse search={target} isLoading={isLoadingSvc} responseSvc={responseSvc}/>
+      <PlanetResponse
+        search={target}
+        isLoading={isLoadingSvc}
+        responseSvc={responseSvc}
+      />
     </>
   );
 }

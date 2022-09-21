@@ -8,8 +8,6 @@ import About from "./pages/About";
 import Home from "./pages/Home";
 import PlanetSearch from "./components/PlanetSearch";
 import PeopleSearch from "./components/PeopleSearch";
-import PersonDisplay from "./components/PersonDisplay";
-import PlanetDisplay from "./components/PlanetDisplay";
 import SpeciesDisplay from "./components/SpeciesDisplay";
 import ResidentsDisplay from "./components/ResidentsDisplay";
 
@@ -32,11 +30,10 @@ ReactDOM.render(
         <Route path="world" element={<PlanetSearch />} />
         <Route path="character" element={<PeopleSearch />} />
       </Route>
-      <Route path="/person" element={<PersonDisplay />} />
-      <Route path="/planet" element={<PlanetDisplay />}>
+      <Route path="/person" element={<PeopleSearch />} />
+      <Route path="/planet" element={<PlanetSearch />}>
         <Route path="residents" element={<ResidentsDisplay />} />
       </Route>
-      <Route path="/species" element={<SpeciesDisplay />} />
       <Route path="/about" element={<About />} />
     </Routes>
   </BrowserRouter>,
