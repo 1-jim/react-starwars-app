@@ -2,8 +2,3 @@
   inputs:
     command: 'install'
     customCommand: 'run build'
-- task: PublishBuildArtifacts@1
-  inputs:
-    PathtoPublish: 'build'
-    ArtifactName: 'drop'
-    publishLocation: 'Container'
